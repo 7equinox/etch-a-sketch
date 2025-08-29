@@ -10,6 +10,7 @@ for (let i = 0; i < INT_SQUARE_COUNT; i++)
     for (let j = 0; j < INT_SQUARE_COUNT; j++)
     {
         const colDivCntnr = document.createElement('div');
+        colDivCntnr.setAttribute('class', 'col-container');
         rowDivCntnr.appendChild(colDivCntnr);
     }
 }
