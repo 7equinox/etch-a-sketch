@@ -23,31 +23,35 @@ function createGrid(intGridSize = 16)
 
     const divListWhiteBox = document.querySelectorAll('.white-box');
 
+    // Initialize count for customized bg style rule
     let intStyleRule = 0;
 
     // Set up a 'hover' effect for grid divs
     divListWhiteBox.forEach((divWhiteBox) => {
         divWhiteBox.addEventListener('mouseover', () => {
-
+            // Collect current classlist
             const arrStrClassList = [...divWhiteBox.classList];
+
+            // Check if customized bg rule exists
             const boolHasRandRgb = arrStrClassList.some(
                 strClass => strClass.includes('bg-rand-rgb')
             );
 
+            // Remove customized bg rule if exists
             if (boolHasRandRgb)
             {
+                // Customized bg-rand-rgb always in the last pos of classlist
                 const intLastClassIdx = divWhiteBox.classList.length - 1;
                 const strLastClassName = divWhiteBox.classList[intLastClassIdx];
                 divWhiteBox.classList.remove(strLastClassName);
             }
 
+            // Randomize the squares' RGB values with each interaction
             const intRandRed = Math.ceil(Math.random() * 255);
             const intRandGreen = Math.ceil(Math.random() * 255);
             const intRandBlue = Math.ceil(Math.random() * 255);
-
             const styleSheet = document.styleSheets[0];
             const intCssRuleCount = styleSheet.cssRules.length;
-
             styleSheet.insertRule(`
                 .bg-rand-rgb-${intStyleRule}
                 {
