@@ -9,3 +9,14 @@ for (let i = 0; i < INT_SQUARE_COUNT; i++)
     divChild.classList.toggle('black-box');
     divCntnr.appendChild(divChild);
 }
+
+const divBlckBoxes = document.querySelectorAll('.black-box');
+
+divBlckBoxes.forEach((divBlckBox) => {
+    divBlckBox.addEventListener('mouseover', () => {
+        if (!(divBlckBox.classList.contains('bg-blue')))
+        {
+            divBlckBox.classList.toggle('bg-blue');
+        }
+    });
+});
