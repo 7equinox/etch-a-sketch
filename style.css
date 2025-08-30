@@ -18,9 +18,3 @@ button
     border: 1px solid rgba(0, 0, 0, 0.3);
     box-sizing: border-box;
 }
-
-.dark-effect
-{
-    background-color: black;
-    opacity: 0%;
-}

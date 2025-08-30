@@ -24,7 +24,7 @@ function createGrid(intGridSize = 16)
     const divListBlackBox = document.querySelectorAll('.black-box');
 
     // Initialize count for customized bg style rule
-    let intDarkRgbRule = 0;
+    let intDarkenRgbRule = 0;
 
     // Set up a 'hover' effect for grid divs
     divListBlackBox.forEach((divBlackBox) => {
@@ -60,6 +60,7 @@ function createGrid(intGridSize = 16)
 
                 if(!boolHasBgBlack)
                 {
+                    console.log("WAW");
                     styleSheet.insertRule(`
                         .bg-black
                         {
@@ -77,7 +78,7 @@ function createGrid(intGridSize = 16)
                 const intRandGreen = Math.ceil(Math.random() * 255);
                 const intRandBlue = Math.ceil(Math.random() * 255);
                 styleSheet.insertRule(`
-                    .darken-bg-rand-rgb-${intDarkRgbRule}
+                    .darken-bg-rand-rgb-${intDarkenRgbRule}
                     {
                         background-color: rgb(
                             ${intRandRed},
@@ -88,9 +89,9 @@ function createGrid(intGridSize = 16)
                     }
                 `, intCssRuleCount);
 
-                divBlackBox.classList.add(`darken-bg-rand-rgb-${intDarkRgbRule}`);
+                divBlackBox.classList.add(`darken-bg-rand-rgb-${intDarkenRgbRule}`);
 
-                intDarkRgbRule++;
+                intDarkenRgbRule++;
                 intOpacityPrcnt += 10;
             }
         });
@@ -130,3 +131,7 @@ btnEditGrid.addEventListener('click', () => {
         createGrid(intNewSquareCnt);
     }
 });
+
+// TODO: Make .darken-bg-rand-rgb-### index-ordered base (left to right, up to down basis)
+// TODO: Put .black-box css rule and its property in js
+// TODO: Refactor the code
