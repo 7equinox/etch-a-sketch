@@ -9,63 +9,90 @@ function createGrid(intGridSize = 16)
     for (let i = 0; i < intTotalSquares; i++)
     {
         const divChild = document.createElement('div');
-        divChild.classList.add('white-box');
+        divChild.classList.add('black-box');
 
-        // Access the 4th CSS rule in style.css (currently `.white-box`)
-        const styleWhiteBox = document.styleSheets[0].cssRules[3];
+        // Access the 3rd CSS rule in style.css (currently `.black-box`)
+        const styleBlackBox = document.styleSheets[0].cssRules[2];
 
         const numBoxSize = 704 / intGridSize;
-        styleWhiteBox.style.width = `${numBoxSize}px`;
-        styleWhiteBox.style.height = `${numBoxSize}px`;
+        styleBlackBox.style.width = `${numBoxSize}px`;
+        styleBlackBox.style.height = `${numBoxSize}px`;
 
         divCntnr.appendChild(divChild);
     }
 
-    const divListWhiteBox = document.querySelectorAll('.white-box');
+    const divListBlackBox = document.querySelectorAll('.black-box');
 
     // Initialize count for customized bg style rule
-    let intStyleRule = 0;
+    let intDarkRgbRule = 0;
 
     // Set up a 'hover' effect for grid divs
-    divListWhiteBox.forEach((divWhiteBox) => {
-        divWhiteBox.addEventListener('mouseover', () => {
+    divListBlackBox.forEach((divBlackBox) => {
+
+        let intOpacityPrcnt = 20;
+
+        divBlackBox.addEventListener('mouseover', () => {
             // Collect current classlist
-            const arrStrClassList = [...divWhiteBox.classList];
+            const arrStrClassList = [...divBlackBox.classList];
 
             // Check if customized bg rule exists
             const boolHasRandRgb = arrStrClassList.some(
-                strClass => strClass.includes('bg-rand-rgb')
+                strClass => strClass.includes('darken-bg-rand-rgb')
             );
 
             // Remove customized bg rule if exists
             if (boolHasRandRgb)
             {
-                // Customized bg-rand-rgb always in the last pos of classlist
-                const intLastClassIdx = divWhiteBox.classList.length - 1;
-                const strLastClassName = divWhiteBox.classList[intLastClassIdx];
-                divWhiteBox.classList.remove(strLastClassName);
+                // Customized darken-bg-rand-rgb always in the second pos of classlist
+                const intLastClassIdx = divBlackBox.classList.length - 1;
+                const strLastClassName = divBlackBox.classList[intLastClassIdx];
+                divBlackBox.classList.remove(strLastClassName);
             }
 
-            // Randomize the squares' RGB values with each interaction
-            const intRandRed = Math.ceil(Math.random() * 255);
-            const intRandGreen = Math.ceil(Math.random() * 255);
-            const intRandBlue = Math.ceil(Math.random() * 255);
             const styleSheet = document.styleSheets[0];
             const intCssRuleCount = styleSheet.cssRules.length;
-            styleSheet.insertRule(`
-                .bg-rand-rgb-${intStyleRule}
+
+            if (intOpacityPrcnt === 110)
+            {
+                const boolHasBgBlack = arrStrClassList.some(
+                    strClass => strClass.includes('bg-black')
+                );
+
+                if(!boolHasBgBlack)
                 {
-                    background-color: rgb(
-                        ${intRandRed},
-                        ${intRandGreen},
-                        ${intRandBlue}
-                    );
+                    styleSheet.insertRule(`
+                        .bg-black
+                        {
+                            background-color: black;
+                        }
+                    `, intCssRuleCount);
                 }
-            `, intCssRuleCount);
 
-            divWhiteBox.classList.add(`bg-rand-rgb-${intStyleRule}`);
+                divBlackBox.classList.add('bg-black');
+            }
+            else
+            {
+                // Randomize the squares' RGB values with each interaction
+                const intRandRed = Math.ceil(Math.random() * 255);
+                const intRandGreen = Math.ceil(Math.random() * 255);
+                const intRandBlue = Math.ceil(Math.random() * 255);
+                styleSheet.insertRule(`
+                    .darken-bg-rand-rgb-${intDarkRgbRule}
+                    {
+                        background-color: rgb(
+                            ${intRandRed},
+                            ${intRandGreen},
+                            ${intRandBlue}
+                        );
+                        opacity: ${intOpacityPrcnt}%;
+                    }
+                `, intCssRuleCount);
 
-            intStyleRule++;
+                divBlackBox.classList.add(`darken-bg-rand-rgb-${intDarkRgbRule}`);
+
+                intDarkRgbRule++;
+                intOpacityPrcnt += 10;
+            }
         });
     });
 }
