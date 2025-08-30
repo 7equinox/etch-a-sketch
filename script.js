@@ -1,24 +1,33 @@
-const INT_SQUARE_COUNT = 16 * 16;
-
 const divCntnr = document.querySelector('.container');
 
-for (let i = 0; i < INT_SQUARE_COUNT; i++)
+function createGrid(intGridSize = 16)
 {
-    const divChild = document.createElement('div');
-    divChild.classList.toggle('white-box');
-    divCntnr.appendChild(divChild);
-}
+    const intTotalSquares = intGridSize ** 2;
 
-const divBlckBoxes = document.querySelectorAll('.white-box');
+    for (let i = 0; i < intTotalSquares; i++)
+    {
+        const divChild = document.createElement('div');
+        divChild.classList.toggle('white-box');
 
-divBlckBoxes.forEach((divBlckBox) => {
-    divBlckBox.addEventListener('mouseover', () => {
-        if (!(divBlckBox.classList.contains('bg-blue')))
-        {
-            divBlckBox.classList.toggle('bg-blue');
-        }
+        const styleWhiteBox = document.styleSheets[0].cssRules[3];
+        const numBoxSize = 704 / intGridSize;
+        styleWhiteBox.style.width = `${numBoxSize}px`;
+        styleWhiteBox.style.height = `${numBoxSize}px`;
+
+        divCntnr.appendChild(divChild);
+    }
+
+    const divWhiteBoxes = document.querySelectorAll('.white-box');
+
+    divWhiteBoxes.forEach((divWhiteBox) => {
+        divWhiteBox.addEventListener('mouseover', () => {
+            if (!(divWhiteBox.classList.contains('bg-blue')))
+            {
+                divWhiteBox.classList.toggle('bg-blue');
+            }
+        });
     });
-});
+}
 
 const btnEditGrid = document.querySelector('button');
 
@@ -40,29 +49,8 @@ btnEditGrid.addEventListener('click', () => {
             divCntnr.removeChild(divCntnr.firstChild);
         }
 
-        for (let i = 0; i < Math.pow(intNewSquareCnt, 2); i++)
-        {
-            const divChild = document.createElement('div');
-            divChild.classList.toggle('white-box');
-
-            const styleWhiteBox = document.styleSheets[0].cssRules[3];
-            const numBoxSize = 704 / intNewSquareCnt;
-
-            styleWhiteBox.style.width = `${numBoxSize}px`;
-            styleWhiteBox.style.height = `${numBoxSize}px`;
-            
-            divCntnr.appendChild(divChild);
-        }
-
-        const divBlckBoxes = document.querySelectorAll('.white-box');
-
-        divBlckBoxes.forEach((divBlckBox) => {
-            divBlckBox.addEventListener('mouseover', () => {
-                if (!(divBlckBox.classList.contains('bg-blue')))
-                {
-                    divBlckBox.classList.toggle('bg-blue');
-                }
-            });
-        });
+        createGrid(intNewSquareCnt);
     }
 });
+
+createGrid();
