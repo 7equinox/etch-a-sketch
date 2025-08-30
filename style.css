@@ -1,18 +1,14 @@
 div.container
 {
-    max-height: 700px;
-    max-width: 700px;
+    width: 700px;
 
     display: flex;
     flex-wrap: wrap;
-    flex: 0 0 42px;
 }
 
 .black-box
 {
     border: 1px solid black;
-    width: 42px; /* placeholder */
-    height: 42px; /* placeholder */
+    width: 42px;
+    height: 42px;
 }
-
-/* TODO: when shrinking the website (width-based), it must not goes down... */
