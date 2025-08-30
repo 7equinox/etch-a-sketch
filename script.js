@@ -9,7 +9,7 @@ function createGrid(intGridSize = 16)
     for (let i = 0; i < intTotalSquares; i++)
     {
         const divChild = document.createElement('div');
-        divChild.classList.toggle('white-box');
+        divChild.classList.add('white-box');
 
         // Access the 4th CSS rule in style.css (currently `.white-box`)
         const styleWhiteBox = document.styleSheets[0].cssRules[3];
@@ -21,15 +21,47 @@ function createGrid(intGridSize = 16)
         divCntnr.appendChild(divChild);
     }
 
-    const divWhiteBoxes = document.querySelectorAll('.white-box');
+    const divListWhiteBox = document.querySelectorAll('.white-box');
+
+    let intStyleRule = 0;
 
     // Set up a 'hover' effect for grid divs
-    divWhiteBoxes.forEach((divWhiteBox) => {
+    divListWhiteBox.forEach((divWhiteBox) => {
         divWhiteBox.addEventListener('mouseover', () => {
-            if (!(divWhiteBox.classList.contains('bg-blue')))
+
+            const arrStrClassList = [...divWhiteBox.classList];
+            const boolHasRandRgb = arrStrClassList.some(
+                strClass => strClass.includes('bg-rand-rgb')
+            );
+
+            if (boolHasRandRgb)
             {
-                divWhiteBox.classList.toggle('bg-blue');
+                const intLastClassIdx = divWhiteBox.classList.length - 1;
+                const strLastClassName = divWhiteBox.classList[intLastClassIdx];
+                divWhiteBox.classList.remove(strLastClassName);
             }
+
+            const intRandRed = Math.ceil(Math.random() * 255);
+            const intRandGreen = Math.ceil(Math.random() * 255);
+            const intRandBlue = Math.ceil(Math.random() * 255);
+
+            const styleSheet = document.styleSheets[0];
+            const intCssRuleCount = styleSheet.cssRules.length;
+
+            styleSheet.insertRule(`
+                .bg-rand-rgb-${intStyleRule}
+                {
+                    background-color: rgb(
+                        ${intRandRed},
+                        ${intRandGreen},
+                        ${intRandBlue}
+                    );
+                }
+            `, intCssRuleCount);
+
+            divWhiteBox.classList.add(`bg-rand-rgb-${intStyleRule}`);
+
+            intStyleRule++;
         });
     });
 }
@@ -44,7 +76,11 @@ btnEditGrid.addEventListener('click', () => {
     const strInput = prompt("[PROMPT] Enter the new number of squares per side (1-100)");
     const intNewSquareCnt = parseInt(strInput);
     
-    if (!Number.isInteger(intNewSquareCnt))
+    if (strInput === null)
+    {
+        return;
+    }
+    else if (!Number.isInteger(intNewSquareCnt))
     {
         alert("[ERROR] Please input a number!");
     }
