@@ -23,44 +23,54 @@ function createGrid(intGridSize = 16)
 
     const divListBlackBox = document.querySelectorAll('.black-box');
 
-    // Initialize count for customized bg style rule
-    let intDarkenRgbRule = 0;
-
     // Set up a 'hover' effect for grid divs
-    divListBlackBox.forEach((divBlackBox) => {
+    divListBlackBox.forEach((divBlackBox, intIdx) => {
 
+        const styleSheet = document.styleSheets[0];
+        let intCssRuleCount = styleSheet.cssRules.length;
+
+        styleSheet.insertRule(`
+            .darken-bg-rand-rgb-${intIdx}
+            {
+                background-color: transparent;
+            }
+        `, intCssRuleCount);
+
+        intCssRuleCount++;
+        
         let intOpacityPrcnt = 20;
 
         divBlackBox.addEventListener('mouseover', () => {
             // Collect current classlist
-            const arrStrClassList = [...divBlackBox.classList];
-
+            const arrCssRule = [...styleSheet.cssRules];
+            // console.log(arrCssRule);
+            // console.log(arrCssRule[3].selectorText === ".darken-bg-rand-rgb-0");
             // Check if customized bg rule exists
-            const boolHasRandRgb = arrStrClassList.some(
-                strClass => strClass.includes('darken-bg-rand-rgb')
-            );
+            const boolHasRandRgb = arrCssRule[intIdx + 3];
 
-            // Remove customized bg rule if exists
+            // TODO: Continue making .darken-bg-rand-rgb-### index-ordered base (left to right, up to down basis)
+
+            // ???
+            console.log(boolHasRandRgb);
             if (boolHasRandRgb)
-            {
-                // Customized darken-bg-rand-rgb always in the second pos of classlist
-                const intLastClassIdx = divBlackBox.classList.length - 1;
-                const strLastClassName = divBlackBox.classList[intLastClassIdx];
-                divBlackBox.classList.remove(strLastClassName);
-            }
+            // {
+            //     // Customized darken-bg-rand-rgb always in the second pos of classlist
+            //     const intLastClassIdx = divBlackBox.classList.length - 1;
+            //     const strLastClassName = divBlackBox.classList[intLastClassIdx];
+            //     divBlackBox.classList.remove(strLastClassName);
+            // }
 
-            const styleSheet = document.styleSheets[0];
-            const intCssRuleCount = styleSheet.cssRules.length;
+            
+            intCssRuleCount = styleSheet.cssRules.length;
 
             if (intOpacityPrcnt === 110)
             {
-                const boolHasBgBlack = arrStrClassList.some(
-                    strClass => strClass.includes('bg-black')
+                const boolHasBgBlack = arrCssRule.some(
+                    cssRule => cssRule.includes('bg-black')
                 );
 
                 if(!boolHasBgBlack)
                 {
-                    console.log("WAW");
                     styleSheet.insertRule(`
                         .bg-black
                         {
@@ -78,7 +88,7 @@ function createGrid(intGridSize = 16)
                 const intRandGreen = Math.ceil(Math.random() * 255);
                 const intRandBlue = Math.ceil(Math.random() * 255);
                 styleSheet.insertRule(`
-                    .darken-bg-rand-rgb-${intDarkenRgbRule}
+                    .darken-bg-rand-rgb-${intIdx}
                     {
                         background-color: rgb(
                             ${intRandRed},
@@ -89,9 +99,8 @@ function createGrid(intGridSize = 16)
                     }
                 `, intCssRuleCount);
 
-                divBlackBox.classList.add(`darken-bg-rand-rgb-${intDarkenRgbRule}`);
+                divBlackBox.classList.add(`darken-bg-rand-rgb-${intIdx}`);
 
-                intDarkenRgbRule++;
                 intOpacityPrcnt += 10;
             }
         });
