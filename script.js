@@ -1,4 +1,6 @@
 const divCntnr = document.querySelector('.container');
+const styleSheet = document.styleSheets[0];
+let intCssRuleCount = styleSheet.cssRules.length;
 
 // Function to create n^2 grid of square divs
 function createGrid(intGridSize = 16)
@@ -26,9 +28,6 @@ function createGrid(intGridSize = 16)
     // Set up a 'hover' effect for grid divs
     divListBlackBox.forEach((divBlackBox, intIdx) => {
 
-        const styleSheet = document.styleSheets[0];
-        let intCssRuleCount = styleSheet.cssRules.length;
-
         styleSheet.insertRule(`
             .darken-bg-rand-rgb-${intIdx}
             {
@@ -38,7 +37,7 @@ function createGrid(intGridSize = 16)
 
         intCssRuleCount++;
         
-        let intOpacityPrcnt = 20;
+        let intOpacityPrcnt = 10;
 
         divBlackBox.addEventListener('mouseover', () => {
             // Collect current classlist
@@ -46,65 +45,81 @@ function createGrid(intGridSize = 16)
             // console.log(arrCssRule);
             // console.log(arrCssRule[3].selectorText === ".darken-bg-rand-rgb-0");
             // Check if customized bg rule exists
-            const boolHasRandRgb = arrCssRule[intIdx + 3];
+            const divBlckBxStyle = arrCssRule[intIdx + 3];
 
             // TODO: Continue making .darken-bg-rand-rgb-### index-ordered base (left to right, up to down basis)
 
+
             // ???
-            console.log(boolHasRandRgb);
-            if (boolHasRandRgb)
-            // {
-            //     // Customized darken-bg-rand-rgb always in the second pos of classlist
-            //     const intLastClassIdx = divBlackBox.classList.length - 1;
-            //     const strLastClassName = divBlackBox.classList[intLastClassIdx];
-            //     divBlackBox.classList.remove(strLastClassName);
-            // }
+            // console.log(divBlckBxStyle.cssText);
+            // divBlckBxStyle.style.setProperty("background-color", "green");
+            // console.log(divBlckBxStyle);
 
-            
-            intCssRuleCount = styleSheet.cssRules.length;
-
-            if (intOpacityPrcnt === 110)
-            {
-                const boolHasBgBlack = arrCssRule.some(
-                    cssRule => cssRule.includes('bg-black')
-                );
-
-                if(!boolHasBgBlack)
-                {
-                    styleSheet.insertRule(`
-                        .bg-black
-                        {
-                            background-color: black;
-                        }
-                    `, intCssRuleCount);
-                }
-
-                divBlackBox.classList.add('bg-black');
-            }
-            else
+            // divBlckBxStyle.style.setProperty("background-color", "blue");
+            // console.log(divBlckBxStyle.cssText);
+            if (divBlckBxStyle && intOpacityPrcnt <= 100)
             {
                 // Randomize the squares' RGB values with each interaction
                 const intRandRed = Math.ceil(Math.random() * 255);
                 const intRandGreen = Math.ceil(Math.random() * 255);
                 const intRandBlue = Math.ceil(Math.random() * 255);
-                styleSheet.insertRule(`
-                    .darken-bg-rand-rgb-${intIdx}
-                    {
-                        background-color: rgb(
-                            ${intRandRed},
-                            ${intRandGreen},
-                            ${intRandBlue}
-                        );
-                        opacity: ${intOpacityPrcnt}%;
-                    }
-                `, intCssRuleCount);
 
-                divBlackBox.classList.add(`darken-bg-rand-rgb-${intIdx}`);
+                divBlckBxStyle.style.setProperty(
+                    "background-color",
+                    `rgb(
+                        ${intRandRed},
+                        ${intRandGreen},
+                        ${intRandBlue}
+                    )`
+                );
+
+                divBlckBxStyle.style.setProperty(
+                    "opacity",
+                    `${intOpacityPrcnt}%`
+                );
+
+                console.log(divBlckBxStyle.cssText);
 
                 intOpacityPrcnt += 10;
             }
+            
+            if (intOpacityPrcnt > 100)
+            {
+                divBlckBxStyle.style.setProperty(
+                    "background-color",
+                    "black"
+                );
+
+                divBlckBxStyle.style.removeProperty("opacity");
+            }
+
+            divBlackBox.classList.add(`darken-bg-rand-rgb-${intIdx}`);
+            // else
+            // {
+            //     // Randomize the squares' RGB values with each interaction
+            //     const intRandRed = Math.ceil(Math.random() * 255);
+            //     const intRandGreen = Math.ceil(Math.random() * 255);
+            //     const intRandBlue = Math.ceil(Math.random() * 255);
+            //     styleSheet.insertRule(`
+            //         .darken-bg-rand-rgb-${intIdx}
+            //         {
+            //             background-color: rgb(
+            //                 ${intRandRed},
+            //                 ${intRandGreen},
+            //                 ${intRandBlue}
+            //             );
+            //             opacity: ${intOpacityPrcnt}%;
+            //         }
+            //     `, intCssRuleCount);
+
+            //     divBlackBox.classList.add(`darken-bg-rand-rgb-${intIdx}`);
+
+            //     intOpacityPrcnt += 10;
+            // }
         });
     });
+    console.log(intCssRuleCount);
+    console.log(styleSheet.cssRules.length);
 }
 
 // Initially call createGrid() with a default grid of square divs
@@ -132,15 +147,20 @@ btnEditGrid.addEventListener('click', () => {
     else
     {
         // Remove existing grid
-        while (divCntnr.hasChildNodes()) {
+        while (divCntnr.hasChildNodes())
+        {
             divCntnr.removeChild(divCntnr.firstChild);
         }
 
+        while(intCssRuleCount > 3)
+        {
+            styleSheet.deleteRule(3);
+            intCssRuleCount = styleSheet.cssRules.length;
+        }
         // Generate new grid given number of squares per side
         createGrid(intNewSquareCnt);
     }
 });
 
-// TODO: Make .darken-bg-rand-rgb-### index-ordered base (left to right, up to down basis)
 // TODO: Put .black-box css rule and its property in js
 // TODO: Refactor the code
