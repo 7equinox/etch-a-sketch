@@ -13,12 +13,17 @@ function createGrid(intGridSize = 16)
         const divChild = document.createElement('div');
         divChild.classList.add('black-box');
 
-        // Access the 3rd CSS rule in style.css (currently `.black-box`)
-        const styleBlackBox = document.styleSheets[0].cssRules[2];
-
         const numBoxSize = 704 / intGridSize;
-        styleBlackBox.style.width = `${numBoxSize}px`;
-        styleBlackBox.style.height = `${numBoxSize}px`;
+
+        styleSheet.insertRule(`
+            .black-box
+            {
+                width: ${numBoxSize}px;
+                height: ${numBoxSize}px;
+                border: 1px solid rgba(0, 0, 0, 0.3);
+                box-sizing: border-box;
+            }
+        `, intCssRuleCount);
 
         divCntnr.appendChild(divChild);
     }
@@ -45,10 +50,7 @@ function createGrid(intGridSize = 16)
             // console.log(arrCssRule);
             // console.log(arrCssRule[3].selectorText === ".darken-bg-rand-rgb-0");
             // Check if customized bg rule exists
-            const divBlckBxStyle = arrCssRule[intIdx + 3];
-
-            // TODO: Continue making .darken-bg-rand-rgb-### index-ordered base (left to right, up to down basis)
-
+            const divBlckBxStyle = arrCssRule[intIdx + 2];
 
             // ???
             // console.log(divBlckBxStyle.cssText);
@@ -152,9 +154,9 @@ btnEditGrid.addEventListener('click', () => {
             divCntnr.removeChild(divCntnr.firstChild);
         }
 
-        while(intCssRuleCount > 3)
+        while(intCssRuleCount > 2)
         {
-            styleSheet.deleteRule(3);
+            styleSheet.deleteRule(2);
             intCssRuleCount = styleSheet.cssRules.length;
         }
         // Generate new grid given number of squares per side
@@ -162,5 +164,4 @@ btnEditGrid.addEventListener('click', () => {
     }
 });
 
-// TODO: Put .black-box css rule and its property in js
 // TODO: Refactor the code
